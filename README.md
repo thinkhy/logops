@@ -6,6 +6,7 @@ Installation
   
 ```shell
 go get github.com/thinkhy/logops
+```
 
 Example
 ----------
