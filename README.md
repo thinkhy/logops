@@ -1,6 +1,30 @@
 # logops
 Golang package for sending operations log to InfluxDB
 
+Installation
+---------------
+  
+```shell
+go get github.com/thinkhy/logops
+
+Example
+----------
+
+```golang
+package main
+
+import (
+   "github.com/thinkhy/logops"
+)
+
+func main() {
+   adr := "http://45.55.21.6:8086"
+   db := "testhub"
+   logops.Setup(adr, db)
+   logops.Log("Wellie",  "Insert", "a Workload")
+}
+```
+
 Activities (Timeline)
 -----------------------
   - When: datatime
