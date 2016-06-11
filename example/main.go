@@ -8,10 +8,10 @@ import (
 
 func main() {
 	config := &logops.Config{
-		// Address: "http://127.0.0.1:8086",
-		Address:  "45.55.21.6:8089",
+		Address: "http://45.55.21.6:8086",
+		// Address:  "45.55.21.6:8089",
 		Database: "TestDB",
-		UseUDP:   true,
+		// UseUDP:   true,
 	}
 	h, err := logops.NewHook(config)
 	if err != nil {

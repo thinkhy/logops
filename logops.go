@@ -107,7 +107,6 @@ func (hook *Hook) startBatchHandler() {
 	for ; done || hook.config.retryCount < hook.config.MaxRetryCount; hook.config.retryCount++ {
 		// wait for some seconds and retry
 		time.Sleep(time.Duration(hook.config.retryCount) * time.Second)
-		fmt.Println("retryCount:", hook.config.retryCount)
 
 		var err error
 		var c client.Client
@@ -121,7 +120,7 @@ func (hook *Hook) startBatchHandler() {
 			})
 		}
 		if err != nil {
-			log.Printf("Make client #%d, Error: %v", hook.config.retryCount, err)
+			log.Printf("[logops] Make client #%d, Error: %v", hook.config.retryCount, err)
 			continue
 		}
 		defer c.Close()
@@ -129,7 +128,7 @@ func (hook *Hook) startBatchHandler() {
 		if hook.config.UseUDP == false {
 			q := client.NewQuery(fmt.Sprintf("CREATE DATABASE %s", hook.config.Database), "", "")
 			if response, err := c.Query(q); err != nil {
-				fmt.Println("Failed to create db ", hook.config.Database, response.Error())
+				fmt.Println("[logops] Failed to create db ", hook.config.Database, response.Error())
 			}
 		}
 
@@ -145,7 +144,6 @@ func (hook *Hook) startBatchHandler() {
 					log.Fatalln("[logops] NewBatchPoints Error: ", err)
 					break
 				}
-				fmt.Println("DB:", hook.config.Database)
 
 				// Create a point and add to batch
 				tags := map[string]string{"module": a.module}
