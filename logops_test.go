@@ -3,6 +3,7 @@ package logops
 import (
 	"fmt"
 	"testing"
+	"time"
 )
 
 func TestLog(t *testing.T) {
@@ -25,6 +26,8 @@ func TestLog(t *testing.T) {
 
 	module = "testsuite"
 	h.Write(module, who, how, what)
+
+	time.Sleep(3 * time.Second)
 	h.tearDown()
 	return
 }

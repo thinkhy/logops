@@ -36,6 +36,7 @@ type Config struct {
 	BatchInterval  int // seconds
 	BatchSize      int
 	MaxRetryCount  int
+	UseUDP         bool
 	retryCount     int
 	chTearDown     chan bool // just for testing, don't use it in production env
 	chTearDownDone chan bool // just for testing, don't use it in production env
@@ -106,13 +107,19 @@ func (hook *Hook) startBatchHandler() {
 	for ; done || hook.config.retryCount < hook.config.MaxRetryCount; hook.config.retryCount++ {
 		// wait for some seconds and retry
 		time.Sleep(time.Duration(hook.config.retryCount) * time.Second)
+		fmt.Println("retryCount:", hook.config.retryCount)
 
-		c, err := client.NewHTTPClient(client.HTTPConfig{
-			Addr:     hook.config.Address,
-			Username: hook.config.Username,
-			Password: hook.config.Password,
-		})
-		// c, err := client.NewUDPClient(client.UDPConfig{Addr: "45.55.21.7:8087"})
+		var err error
+		var c client.Client
+		if hook.config.UseUDP {
+			c, err = client.NewUDPClient(client.UDPConfig{Addr: hook.config.Address})
+		} else {
+			c, err = client.NewHTTPClient(client.HTTPConfig{
+				Addr:     hook.config.Address,
+				Username: hook.config.Username,
+				Password: hook.config.Password,
+			})
+		}
 		if err != nil {
 			log.Printf("Make client #%d, Error: %v", hook.config.retryCount, err)
 			continue
@@ -136,6 +143,7 @@ func (hook *Hook) startBatchHandler() {
 					log.Fatalln("[logops] NewBatchPoints Error: ", err)
 					break
 				}
+				fmt.Println("DB:", hook.config.Database)
 
 				// Create a point and add to batch
 				tags := map[string]string{"module": a.module}

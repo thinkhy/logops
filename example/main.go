@@ -1,18 +1,22 @@
 package main
 
 import (
+	"fmt"
 	"github.com/thinkhy/logops"
+	"time"
 )
 
 func main() {
 	config := &logops.Config{
-		// Address:  "http://127.0.0.1:8086",
-		Address:  "http://45.55.21.6:8086",
+		// Address: "http://127.0.0.1:8086",
+		Address:  "http://45.55.21.6:8089",
 		Database: "TestDB",
+		UseUDP:   true,
 	}
 	h, err := logops.NewHook(config)
 	if err != nil {
-		t.Fail()
+		fmt.Println(err)
+		panic(err)
 	}
 
 	module := "workload"
@@ -23,6 +27,6 @@ func main() {
 
 	module = "testsuite"
 	h.Write(module, who, how, what)
-	h.tearDown()
+	time.Sleep(3 * time.Second)
 	return
 }
