@@ -15,14 +15,34 @@ Example
 package main
 
 import (
-   "github.com/thinkhy/logops"
+	"fmt"
+	"github.com/thinkhy/logops"
+	"time"
 )
 
 func main() {
-   adr := "http://45.55.21.6:8086"
-   db := "testhub"
-   logops.Setup(adr, db)
-   logops.Log("Wellie",  "Insert", "a Workload")
+	config := &logops.Config{
+		Address: "http://45.55.21.6:8086",
+		// Address:  "45.55.21.6:8089",
+		Database: "TestDB",
+		// UseUDP:   true,
+	}
+	h, err := logops.NewHook(config)
+	if err != nil {
+		fmt.Println(err)
+		panic(err)
+	}
+
+	module := "workload"
+	who := "wellie"
+	how := "insert"
+	what := "workload"
+	h.Write(module, who, how, what)
+
+	module = "testsuite"
+	h.Write(module, who, how, what)
+	time.Sleep(3 * time.Second)
+	return
 }
 ```
 
