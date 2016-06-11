@@ -9,7 +9,7 @@ import (
 func main() {
 	config := &logops.Config{
 		// Address: "http://127.0.0.1:8086",
-		Address:  "http://45.55.21.6:8089",
+		Address:  "45.55.21.6:8089",
 		Database: "TestDB",
 		UseUDP:   true,
 	}

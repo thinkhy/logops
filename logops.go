@@ -126,9 +126,11 @@ func (hook *Hook) startBatchHandler() {
 		}
 		defer c.Close()
 
-		q := client.NewQuery(fmt.Sprintf("CREATE DATABASE %s", hook.config.Database), "", "")
-		if response, err := c.Query(q); err != nil {
-			fmt.Println("Failed to create db ", hook.config.Database, response.Error())
+		if hook.config.UseUDP == false {
+			q := client.NewQuery(fmt.Sprintf("CREATE DATABASE %s", hook.config.Database), "", "")
+			if response, err := c.Query(q); err != nil {
+				fmt.Println("Failed to create db ", hook.config.Database, response.Error())
+			}
 		}
 
 		for true {
@@ -169,9 +171,11 @@ func (hook *Hook) startBatchHandler() {
 				}
 			// For testing
 			case <-hook.config.chTearDown:
-				q := client.NewQuery(fmt.Sprintf("DROP DATABASE %s", hook.config.Database), "", "")
-				if response, err := c.Query(q); err != nil {
-					fmt.Println("Failed to create db ", hook.config.Database, response.Error())
+				if hook.config.UseUDP == false {
+					q := client.NewQuery(fmt.Sprintf("DROP DATABASE %s", hook.config.Database), "", "")
+					if response, err := c.Query(q); err != nil {
+						fmt.Println("Failed to create db ", hook.config.Database, response.Error())
+					}
 				}
 				done = true
 				hook.config.chTearDownDone <- done
