@@ -1,5 +1,10 @@
 # logops
+
+[![Go Report
+Card](https://goreportcard.com/badge/github.com/thinkhy/logops)](https://goreportcard.com/report/github.com/thinkhy/logops)
+
 Golang package for sending operations log to InfluxDB
+
 
 Installation
 ---------------
