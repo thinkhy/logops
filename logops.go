@@ -19,10 +19,11 @@ const (
 	BatchIntervalDefault = 5
 	// BatchSizeDefault represents the maximum size of a batch.
 	BatchSizeDefault = 1000
-	// BatchSizeDefault represents the maximum number of retrying to connect DB.
+	// MaxRetryCountDefault represents the maximum number of retrying to connect DB.
 	MaxRetryCountDefault = 10
 )
 
+// Config data for InfluxDB
 type Config struct {
 	Precision        string
 	Address          string // ip:port
@@ -76,11 +77,6 @@ func (config *Config) setDefaults() {
 	if config.MaxRetryCount <= 0 {
 		config.MaxRetryCount = MaxRetryCountDefault
 	}
-}
-
-type Logger interface {
-	Setup(adr, db string)
-	Log(s string)
 }
 
 // NewHook generate a new InfluxDB hook based on the given configuration
