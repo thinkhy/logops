@@ -49,6 +49,7 @@ type Activity struct {
 	who    string
 	how    string
 	what   string
+	where  string
 }
 
 // Hook represents the hook to InfluxDB
@@ -123,8 +124,9 @@ func (hook *Hook) startBatchHandler() {
 
 		if hook.config.UseUDP == false {
 			q := client.NewQuery(fmt.Sprintf("CREATE DATABASE %s", hook.config.Database), "", "")
-			if response, err := c.Query(q); err != nil {
-				fmt.Println("[logops] Failed to create db ", hook.config.Database, response.Error())
+			if _, err := c.Query(q); err != nil {
+				fmt.Println("[logops] Failed to create db ", hook.config.Database, err)
+				continue
 			}
 		}
 
@@ -148,6 +150,7 @@ func (hook *Hook) startBatchHandler() {
 					"who":   a.who,
 					"how":   a.how,
 					"what":  a.what,
+					"where": a.where,
 				}
 				pt, err := client.NewPoint(hook.config.MeasurementValue, tags, fields)
 				if err != nil {
@@ -177,14 +180,16 @@ func (hook *Hook) startBatchHandler() {
 			} // select
 		} // for true
 	} // for retry
+	panic("Filed to start batch handler")
 }
 
-func (hook *Hook) Write(module, who, how, what string) {
+func (hook *Hook) Write(module, who, how, what, where string) {
 	a := &Activity{
 		module: module,
 		who:    who,
 		how:    how,
 		what:   what,
+		where:  where,
 	}
 	hook.chActivities <- a
 	return
